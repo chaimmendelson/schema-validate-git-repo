@@ -1,0 +1,4 @@
+tyks: 
+- env: dev
+  namespace: consumer-app-dev
+  valuesFile: dev-values.yaml
