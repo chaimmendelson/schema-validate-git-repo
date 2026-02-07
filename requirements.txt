@@ -1,5 +1,4 @@
 jsonschema
-loguru
 pydantic
 pydantic-settings
 pyyaml

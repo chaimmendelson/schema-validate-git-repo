@@ -1,13 +1,8 @@
 import json
 import sys
 from pydantic import ValidationError
-from loguru import logger
 
 from models import Structure, Settings
-
-# send logs to stderr ONLY
-logger.remove()
-logger.add(sys.stderr)
 
 
 def fail(payload: dict, exit_code: int = 1):
