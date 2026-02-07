@@ -1,24 +1,70 @@
 import json
-from pathlib import Path
+import sys
+from pydantic import ValidationError
+from loguru import logger
 
-from models import Structure
+from models import Structure, Settings
 
-def main(folder_path: str, schema_path: str):
-    # Load schema
-    with open(schema_path) as f:
-        schema = json.load(f)
-    
-    # Create Structure instance
-    structure = Structure(folder=Path(folder_path), schema=schema)
-    
-    # Validate structure
+# send logs to stderr ONLY
+logger.remove()
+logger.add(sys.stderr)
+
+
+def fail(payload: dict, exit_code: int = 1):
+    print(json.dumps(payload, indent=2))  # stdout
+    sys.exit(exit_code)
+
+def success(**data):
+    print(json.dumps({"status": "ok", **data}))
+    sys.exit(0)
+
+
+
+def main():
+    try:
+        settings = Settings()
+    except ValidationError as e:
+        e: ValidationError = e
+        fail(
+            payload={
+                "status": "error",
+                "type": "settings_validation",
+                "errors": e.errors(
+                    include_url=False,
+                    include_input=False,
+                )
+            }
+        )
+        return
+
+    schema = json.loads(settings.json_schema.read_text())
+
+    structure = Structure(
+        folder=settings.folder,
+        schema=schema
+    )
+
     errors = structure.validate()
-    
-    if not errors:
-        print("✅ Valid structure")
-    else:
-        print("❌ Invalid structure:")
-        print(errors.model_dump_json(indent=2))
-        
+
+    if errors:
+        fail(
+            payload={
+                "status": "error",
+                "type": "structure_validation",
+                "errors": errors.model_dump().get("errors")
+            }
+        )
+
+        return
+
+    success(
+        payload={
+            "folder": str(settings.folder)
+        }
+    )
+
+    sys.exit(0)
+
+
 if __name__ == "__main__":
-    main("..", "../schemas/structure_schema.json")
+    main()

@@ -2,7 +2,9 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Environment Folder Structure",
   "type": "object",
-  "required": ["consumers"],
+  "required": [
+    "consumers"
+  ],
   "properties": {
     "consumers": {
       "$ref": "#/definitions/Consumers"
@@ -11,62 +13,91 @@
   "definitions": {
     "Consumers": {
       "type": "object",
-      "additionalProperties": { "$ref": "#/definitions/Application" }
+      "additionalProperties": {
+        "$ref": "#/definitions/Application"
+      }
     },
     "Application": {
       "type": "object",
       "patternProperties": {
-        "^[a-z][a-z0-9-]{0,15}[a-z0-9]$": { "$ref": "#/definitions/Organization" }
+        "^[a-z][a-z0-9-]{0,15}[a-z0-9]$": {
+          "$ref": "#/definitions/Organization"
+        }
       },
       "properties": {
-        ".gitkeep": { "type": "null" }
+        ".gitkeep": {
+          "type": "null"
+        }
       },
       "additionalProperties": false
     },
     "Organization": {
       "type": "object",
       "properties": {
-        "meta.yaml": { "$ref": "#/definitions/metaFile" },
-        "values": { "$ref": "#/definitions/ValuesFolder" },
-        ".gitkeep": { "type": "null" }
+        "meta.yaml": {
+          "$ref": "#/definitions/metaFile"
+        },
+        "values": {
+          "$ref": "#/definitions/ValuesFolder"
+        },
+        ".gitkeep": {
+          "type": "null"
+        }
       },
       "additionalProperties": false
     },
     "ValuesFolder": {
       "type": "object",
       "patternProperties": {
-        "^.+\\.yaml$": { "$ref": "#/definitions/valuesFile" }
+        "^.+\\.yaml$": {
+          "$ref": "#/definitions/valuesFile"
+        }
       },
       "properties": {
-        ".gitkeep": { "type": "null" }
+        ".gitkeep": {
+          "type": "null"
+        }
       },
       "additionalProperties": false
     },
     "metaFile": {
       "type": "object",
-      "required": ["tyks"],
+      "required": [
+        "tyks"
+      ],
       "properties": {
         "tyks": {
           "type": "array",
-          "items": { "$ref": "#/definitions/tykInstance" }
+          "items": {
+            "$ref": "#/definitions/tykInstance"
+          }
         }
       },
       "additionalProperties": false
     },
     "tykInstance": {
       "type": "object",
-      "required": ["env", "namespace"],
+      "required": [
+        "env",
+        "namespace"
+      ],
       "properties": {
         "env": {
           "type": "string",
-          "enum": ["dev", "staging", "prod"]
+          "enum": [
+            "dev",
+            "staging",
+            "prod"
+          ]
         },
-        "namespace": { "type": "string" },
-        "valuesFile": { 
-          "type": "string", 
+        "namespace": {
+          "type": "string"
+        },
+        "valuesFile": {
+          "type": "string",
           "not": {
             "pattern": "^.+\\.yaml$"
-          } 
+          }
         }
       },
       "additionalProperties": false
@@ -77,9 +108,15 @@
         "global": {
           "type": "object",
           "properties": {
-            "gateway": { "type": "object" },
-            "pump": { "type": "object" },
-            "oauth2Proxy": { "type": "object" }
+            "gateway": {
+              "type": "object"
+            },
+            "pump": {
+              "type": "object"
+            },
+            "oauth2Proxy": {
+              "type": "object"
+            }
           },
           "additionalProperties": false
         }
