@@ -14,6 +14,11 @@ class Settings(BaseSettings):
         description="Path to schema JSON"
     )
 
+    raise_error: bool = Field(
+        False,
+        description="Whether to raise an error on validation failure (instead of returning a structured error response)"
+    )
+
     model_config = SettingsConfigDict(
         cli_parse_args=True,
         env_file=".env",

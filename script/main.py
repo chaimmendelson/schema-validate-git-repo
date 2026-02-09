@@ -5,8 +5,12 @@ from pydantic import ValidationError
 from models import Structure, Settings
 
 
-def fail(payload: dict, exit_code: int = 1):
+def fail(payload: dict, exit_code: int = 1, raise_error: bool = False):
     print(json.dumps(payload, indent=2))  # stdout
+
+    if raise_error:
+        raise Exception(payload)
+
     sys.exit(exit_code)
 
 def success(**data):
@@ -47,7 +51,8 @@ def main():
                 "status": "error",
                 "type": "structure_validation",
                 "errors": errors.model_dump().get("errors")
-            }
+            },
+            raise_error=settings.raise_error
         )
 
         return
